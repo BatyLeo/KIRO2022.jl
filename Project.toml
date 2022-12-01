@@ -3,6 +3,9 @@ uuid = "be2964f0-6e9b-465d-87b4-84f3cce1a0f3"
 authors = ["Léo Baty and contributors"]
 version = "0.1.0"
 
+[deps]
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+
 [compat]
 julia = "1.7"
 
