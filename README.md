@@ -7,6 +7,8 @@ This repository contains a Julia starting code for the 2022 edition of the KIRO.
 
 A Python version can also be found in the `python` [folder](https://github.com/BatyLeo/KIRO2022.jl/tree/main/python) as a Jupyter notebook.
 
+A c++ version can be found in the `c++` [folder](https://github.com/BatyLeo/KIRO2022.jl/tree/main/c++).
+
 Instances are in the `instances` [folder](https://github.com/BatyLeo/KIRO2022.jl/tree/main/instances).
 
 ## Installation
