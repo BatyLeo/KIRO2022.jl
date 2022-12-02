@@ -1,5 +1,6 @@
 #pragma once
 
+#include <fstream>
 #include <vector>
 
 using namespace std;
@@ -15,10 +16,12 @@ private:
 public:
     Job(int index, vector<int>& task_sequence, int release_date, int due_date, float weight);
     int index() {return _index;};
-    vector<int> task_sequence() {return _task_sequence;};
-    int release_date() {return _release_date;};
-    int due_date() {return _due_date;};
-    int weight() {return _weight;};
+    vector<int> task_sequence() const {return _task_sequence;};
+    int release_date() const {return _release_date;};
+    int due_date() const {return _due_date;};
+    int weight() const {return _weight;};
+    int nb_tasks() const { return _task_sequence.size(); }
+    int get_task_index(int index_in_sequence) const { return _task_sequence[index_in_sequence]; }
 };
 
 class Task
@@ -29,6 +32,11 @@ private:
     vector<int> _machines;
 public:
     Task(int index, int processing_time, vector<int>& machines);
+    int index() const { return _index; }
+    int processing_time() const { return _processing_time; }
+    bool has_machine(int machine_index) const {
+        return find(_machines.begin(), _machines.end(), machine_index) != _machines.end();
+    }
 };
 
 class Instance
@@ -42,8 +50,18 @@ private:
     vector<vector<vector<int>>> _operators;
 public:
     Instance(int nb_operators, float alpha, float beta, vector<Job>& jobs, vector<Task>& tasks, vector<vector<vector<int>>>& operators);
-    int nb_jobs() { return _jobs.size(); }
-    int nb_tasks() { return _tasks.size(); }
-    int nb_machines() { return _operators[0].size(); }
-    int nb_operators() { return _nb_operators; }
+    float alpha() const { return _alpha; }
+    float beta() const { return _beta; }
+    int nb_jobs() const { return _jobs.size(); }
+    int nb_tasks() const { return _tasks.size(); }
+    int nb_machines() const { return _operators[0].size(); }
+    int nb_operators() const { return _nb_operators; }
+    Job get_job(int job_index) const { return _jobs[job_index]; }
+    Task get_task(int task_index) const { return _tasks[task_index]; }
+    bool operator_compatibility(int operator_index, int task_index, int machine_index) const {
+        vector<int> m_list = _operators[task_index][machine_index];
+        return find(m_list.begin(), m_list.end(), operator_index) != m_list.end();
+    }
 };
+
+std::ostream& operator<<(std::ostream &os, Instance const& instance);

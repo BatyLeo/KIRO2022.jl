@@ -23,4 +23,13 @@ Instance::Instance(int nb_operators, float alpha, float beta, vector<Job>& jobs,
     _beta = beta;
     _jobs = jobs;
     _tasks = tasks;
+    _operators = operators;
+}
+
+std::ostream& operator<<(std::ostream& os, const Instance& instance) { 
+    os << "Nb jobs: " << instance.nb_jobs() << endl;
+    os << "Nb tasks: " << instance.nb_tasks() << endl;
+    os << "Nb operators: " << instance.nb_operators() << endl;
+    os << "Nb machines: " << instance.nb_machines();
+    return os;
 }

@@ -110,7 +110,7 @@ function prepare_submission(;
     solutions_folder::String="solutions",
     group::Int=42,
 )
-    names = ["tiny", "medium", "large", "huge"]
+    names = ["KIRO-tiny", "KIRO-medium", "KIRO-large", "KIRO-huge"]
     total_cost = 0.0
     for name in names
         @info "Solving $name instance"

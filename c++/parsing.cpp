@@ -1,6 +1,6 @@
 #include "parsing.h"
 
-Instance parse_instance(string path) {
+Instance read_instance(string path) {
     std::ifstream f(path);
     json data = json::parse(f);
 
@@ -17,9 +17,12 @@ Instance parse_instance(string path) {
     vector<Job> jobs;
     for (auto job : jobs_data) {
         int index = job["job"];
+        index--;
         vector<int> task_sequence;
         for (auto i : job["sequence"]) {
-             task_sequence.push_back(i);
+            int task_index = i;
+            task_index--;
+            task_sequence.push_back(task_index);
         }
         int release_date = job["release_date"];
         int due_date = job["due_date"];
@@ -32,32 +35,73 @@ Instance parse_instance(string path) {
     vector<Task> tasks;
     for (auto task : tasks_data) {
         int index = task["task"];
+        index--;
         int processing_time = task["processing_time"];
         vector<int> machines;
         for (auto machine : task["machines"]) {
-            machines.push_back(machine["machine"]);
+            int machine_index = machine["machine"];
+            machine_index--;
+            machines.push_back(machine_index);
         }
         tasks.push_back(Task(index, processing_time, machines));
     }
 
+
     // read operators
-    vector<vector<vector<int>>> operators(nb_tasks);
-    for (int i_machine = 0; i_machine < nb_machines; i_machine++) {
-        vector<vector<int>> a(nb_machines);
+    vector<vector<vector<int>>> operators;
+    for (int i_task = 0; i_task < nb_tasks; i_task++) {
+        vector<vector<int>> a(nb_machines, vector<int>());
         operators.push_back(a);
     }
+
     for (auto task : tasks_data) {
         int i = task["task"];
-        for (auto machine : task["machine"]) {
+        i--;
+        for (auto machine : task["machines"]) {
             int m = machine["machine"];
+            m--;
             vector<int> operator_list = machine["operators"];
             operators[i][m] = operator_list;
         }
     }
 
-    std::cout << data["parameters"] << typeid(data["parameters"]).name() << std::endl;
-    std::cout << data["jobs"] << std::endl;
-    std::cout << data["tasks"] << std::endl;
-
     return Instance(nb_operators, alpha, beta, jobs, tasks, operators);
+}
+
+Solution read_solution(string path) {
+    std::ifstream f(path);
+    json data = json::parse(f);
+
+    int nb_tasks = data.size();
+    vector<int> starts(nb_tasks, 0);
+    vector<int> machines(nb_tasks, 0);
+    vector<int> operators(nb_tasks, 0);
+    for (auto task : data) {
+        int task_index = task["task"];
+        task_index--;
+        starts[task_index] = task["start"];
+        int m = task["machine"];
+        machines[task_index] = m - 1;
+        operators[task_index] = task["operator"];
+    }
+
+    return Solution(starts, machines, operators);
+}
+
+void write_solution(Solution solution, string path){
+    json data;
+
+    for (int task_index = 0; task_index < solution.nb_tasks(); task_index++) {
+        json task;
+        task["task"] = task_index + 1;
+        task["start"] = solution.start_of_task(task_index);
+        task["machine"] = solution.machine_of_task(task_index) + 1;
+        task["operator"] = solution.operator_of_task(task_index);
+        data.push_back(task);
+    }
+
+    // Write data to json file
+    std::ofstream file(path);
+    file << data;
+    return;
 }
