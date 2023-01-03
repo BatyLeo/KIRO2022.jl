@@ -19,10 +19,11 @@ end
 - `nb_jobs`
 - `nb_tasks`
 - `nb_machines`
-- `unit_penalty`: penalty when a job is late
-- `tardiness`: delay penalty for jobs
+- `α`: penalty when a job is late
+- `β`: delay penalty for jobs
 - `jobs`: job list, in index order
 - `tasks`: task list, in index order
+- `operators`:
 """
 Base.@kwdef struct Instance
     nb_operators::Int
