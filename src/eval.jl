@@ -54,8 +54,7 @@ function is_feasible(solution::Solution, instance::Instance; verbose=true)
                 @warn "Two tasks (including $i) at the same time on machine $m"
                 return false
             end
-            m_time = max(m_time, starts[i])
-            m_time += instance.tasks[i].processing_time
+            m_time = starts[i] + instance.tasks[i].processing_time
         end
     end
 
@@ -68,8 +67,7 @@ function is_feasible(solution::Solution, instance::Instance; verbose=true)
                 @warn "Two tasks at the same time with operator $o ($(starts[i]), $o_time)"
                 return false
             end
-            o_time = max(o_time, starts[i])
-            o_time += instance.tasks[i].processing_time
+            o_time = starts[i] + instance.tasks[i].processing_time
         end
     end
 

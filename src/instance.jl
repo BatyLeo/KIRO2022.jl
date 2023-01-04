@@ -1,3 +1,12 @@
+"""
+    Job
+
+## Attributes
+- `index`: j
+- `task_sequence`: list of task indices i
+- `due_date`: dⱼ
+- `weight`: wⱼ
+"""
 Base.@kwdef struct Job
     index::Int
     task_sequence::Vector{Int}
@@ -6,24 +15,30 @@ Base.@kwdef struct Job
     weight::Float64
 end
 
+"""
+    Task
+
+## Attributes
+- `index`: i
+- `processing_time`: pᵢ
+- `machines`: list of machine indices on which this task can be performed
+"""
 Base.@kwdef struct Task
     index::Int
     processing_time::Int
-    machines::Vector{Int} # list of machine indices on which this task can be performed
+    machines::Vector{Int}
 end
 
 """
     Instance
 
 ## Attributes
-- `nb_jobs`
-- `nb_tasks`
-- `nb_machines`
-- `α`: penalty when a job is late
-- `β`: delay penalty for jobs
-- `jobs`: job list, in index order
-- `tasks`: task list, in index order
-- `operators`:
+- `nb_operators::Int`
+- `α::Float64`: penalty when a job is late
+- `β::Float64`: delay penalty for jobs
+- `jobs::Vector{Job}`: job list, in index order
+- `tasks::Vector{Task}`: task list, in index order
+- `operators::Matrix{Vector{Int}}`: operators[i, m] = list of operators that can operate task i on machine m
 """
 Base.@kwdef struct Instance
     nb_operators::Int
